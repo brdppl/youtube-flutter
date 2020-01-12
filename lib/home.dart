@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:youtube_clone/customSearchDelegate.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -16,12 +17,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   int currentIndex = 0;
+  String _searchResult = '';
 
   @override
   Widget build(BuildContext context) {
 
     List<Widget> telas = [
-      Inicio(),
+      Inicio(_searchResult),
       EmAlta(),
       Inscricoes(),
       Biblioteca()
@@ -48,7 +50,12 @@ class _HomeState extends State<Home> {
           ),
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () => {},
+            onPressed: () async {
+              String res = await showSearch(context: context, delegate: CustomSearchDelegate());
+              setState(() {
+                _searchResult = res;
+              });
+            },
           ),
           IconButton(
             icon: Icon(Icons.account_circle),
@@ -56,7 +63,10 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: telas[this.currentIndex],
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: telas[this.currentIndex]
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: this.currentIndex,
         onTap: (index) {
