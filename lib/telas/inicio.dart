@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_clone/api.dart';
 import 'package:youtube_clone/models/Video.dart';
+import 'package:flutter_youtube/flutter_youtube.dart';
 
 class Inicio extends StatefulWidget {
 
@@ -40,22 +41,32 @@ class _InicioState extends State<Inicio> {
                   List<Video> videos = snapshot.data;
                   Video video = videos[index];
 
-                  return Column(
-                    children: <Widget>[
-                      Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(video.img),
-                            fit: BoxFit.cover
-                          )
+                  return GestureDetector(
+                    onTap: () {
+                      FlutterYoutube.playYoutubeVideoById(
+                        apiKey: API_YOUTUBE_KEY,
+                        videoId: video.id,
+                        autoPlay: true,
+                        fullScreen: true
+                      );
+                    },
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 180,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(video.img),
+                              fit: BoxFit.cover
+                            )
+                          ),
                         ),
-                      ),
-                      ListTile(
-                        title: Text(video.title),
-                        subtitle: Text(video.channel),
-                      )
-                    ],
+                        ListTile(
+                          title: Text(video.title),
+                          subtitle: Text(video.channel),
+                        )
+                      ],
+                    )
                   );
                 },
                 separatorBuilder: (context, index) {
